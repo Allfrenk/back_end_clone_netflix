@@ -21,7 +21,7 @@ app.get("/api/movie", (req, resp) => {
     )
     .then(function (response) {
       const movie = response.data;
-      resp.send({ movie: movie });
+      resp.send(movie);
     });
 });
 
