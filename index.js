@@ -14,7 +14,8 @@ app.get("/", (req, res) => {
 });
 
 // DISCOVER
-app.get("/discover", (req, resp) => {
+app.get("/discover/movie", (req, resp) => {
+  // const movie = req.query.movie;
   //
   axios
     .get(`${API_URL}discover/movie`, {
@@ -34,6 +35,29 @@ app.get("/discover", (req, resp) => {
     });
 });
 
+// TV SERIES
+app.get("/discover/tv", (req, resp) => {
+  //
+  const tv = req.query.tv;
+  //
+  axios
+    .get(`${API_URL}discover/tv`, {
+      params: {
+        api_key: "944143a810402073e91619e119fa95ef",
+        language: "it",
+        sort_by: "popularity.desc",
+        include_adult: false,
+        page: 2,
+      },
+    })
+    .then((response) => {
+      const data = response.data.results;
+      resp.send(data);
+    });
+});
+
+//
+
 app.get("/api/movie", (req, resp) => {
   const movie = req.query.movie;
   const axios = require("axios").default;
@@ -47,6 +71,14 @@ app.get("/api/movie", (req, resp) => {
       resp.send(movie);
     });
 });
+
+// ESERCIZIO 1 GET NOME E COGNOME
+// app.get("/esercizio1", (req, resp) => {
+//   const name = req.query.name;
+//   const surname = req.query.surname;
+//   const user = { name: name, surname: surname };
+//   resp.json(user);
+// });
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
