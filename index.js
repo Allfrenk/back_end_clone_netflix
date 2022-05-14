@@ -5,28 +5,33 @@ const axios = require("axios").default;
 
 // VARIABILI UTILI
 const API_URL = "https://api.themoviedb.org/3/";
-const API_KEY = "944143a810402073e91619e119fa95ef";
+const API_KEY_V4 =
+  "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5NDQxNDNhODEwNDAyMDczZTkxNjE5ZTExOWZhOTVlZiIsInN1YiI6IjYyN2I4NzY1NTExZDA5MGQ2MWI2NmE4NiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2TU_pbRc04jOwDjuLSAQQjB_e7aFQyZ7StYcx_kGvMk";
+const API_KEY_V3 = "944143a810402073e91619e119fa95ef";
 const language = "it";
+const region = "IT";
 
-// DEFAULT ROUTE
+// DEFAULT ROUTE + ISTRUZIONI
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send({
+    title: "NETFLIX CLONE BACK-END",
+    discover_movie: "/discover/movie",
+    discover_tv: "/discover/tv",
+    search_multi: "/search/multi?query=",
+  });
 });
 
-// DISCOVER
+// DISCOVER MOVIE
 app.get("/discover/movie", (req, resp) => {
-  // const movie = req.query.movie;
-  //
   axios
     .get(`${API_URL}discover/movie`, {
       params: {
-        api_key: "944143a810402073e91619e119fa95ef",
-        language: "it",
+        api_key: API_KEY_V3,
+        language: language,
         sort_by: "popularity.desc",
         include_adult: false,
         page: 1,
-
-        //
+        region: region,
       },
     })
     .then((response) => {
@@ -37,17 +42,14 @@ app.get("/discover/movie", (req, resp) => {
 
 // TV SERIES
 app.get("/discover/tv", (req, resp) => {
-  //
-  const tv = req.query.tv;
-  //
   axios
     .get(`${API_URL}discover/tv`, {
       params: {
-        api_key: "944143a810402073e91619e119fa95ef",
-        language: "it",
+        api_key: API_KEY_V3,
+        language: language,
         sort_by: "popularity.desc",
         include_adult: false,
-        page: 2,
+        page: 1,
       },
     })
     .then((response) => {
@@ -56,30 +58,27 @@ app.get("/discover/tv", (req, resp) => {
     });
 });
 
-//
-
-app.get("/api/movie", (req, resp) => {
-  const movie = req.query.movie;
-  const axios = require("axios").default;
-  // richiesta api, movie e id
+//SEARCH BY TV/MOVIE NAME, TV/MOVIE ACTOR
+app.get("/search/multi", (req, resp) => {
+  const query = req.query.query;
   axios
-    .get(
-      `https://api.themoviedb.org/3/movie/550?api_key=${API_KEY}ef&language=${language}`
-    )
-    .then(function (response) {
-      const movie = response.data;
-      resp.send(movie);
+    .get(`${API_URL}search/multi`, {
+      params: {
+        api_key: API_KEY_V3,
+        language: language,
+        query: query,
+        page: 1,
+        include_adult: false,
+        region: region,
+      },
+    })
+    .then((response) => {
+      const results = response.data.results;
+      resp.send(results);
     });
 });
 
-// ESERCIZIO 1 GET NOME E COGNOME
-// app.get("/esercizio1", (req, resp) => {
-//   const name = req.query.name;
-//   const surname = req.query.surname;
-//   const user = { name: name, surname: surname };
-//   resp.json(user);
-// });
-
+// OUTPUT TERMINALE (USARE NODEMON)
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
